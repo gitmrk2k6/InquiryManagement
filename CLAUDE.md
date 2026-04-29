@@ -1,4 +1,10 @@
-# InquiryManagement — Claude Code ルール
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+---
+
+## InquiryManagement — Claude Code ルール
 
 ## 命名規則（Conventional Commits ベース）
 
