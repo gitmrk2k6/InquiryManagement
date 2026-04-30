@@ -8,9 +8,10 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { InquiryStatus } from './inquiry.entity';
 import { CreateInquiryDto, InquiryService } from './inquiry.service';
@@ -18,6 +19,19 @@ import { CreateInquiryDto, InquiryService } from './inquiry.service';
 class UpdateStatusDto {
   @IsEnum(InquiryStatus)
   status: InquiryStatus;
+}
+
+class FindAllQueryDto {
+  @IsOptional()
+  @IsEnum(InquiryStatus)
+  status?: InquiryStatus;
+
+  @IsOptional()
+  @IsEnum(['newest', 'oldest', 'elapsed'])
+  sort?: 'newest' | 'oldest' | 'elapsed';
+
+  @IsOptional()
+  page?: number;
 }
 
 @Controller('inquiries')
@@ -32,8 +46,12 @@ export class InquiryController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.inquiryService.findAll();
+  findAll(@Query() query: FindAllQueryDto) {
+    return this.inquiryService.findAll({
+      status: query.status,
+      sort: query.sort,
+      page: query.page ? Number(query.page) : 1,
+    });
   }
 
   @UseGuards(JwtAuthGuard)
