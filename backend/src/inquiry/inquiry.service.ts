@@ -23,6 +23,14 @@ export class CreateInquiryDto {
   body: string;
 }
 
+export interface FindAllOptions {
+  status?: InquiryStatus;
+  sort?: 'newest' | 'oldest' | 'elapsed';
+  page?: number;
+}
+
+const PAGE_SIZE = 20;
+
 @Injectable()
 export class InquiryService {
   constructor(
@@ -35,8 +43,30 @@ export class InquiryService {
     return this.inquiryRepository.save(inquiry);
   }
 
-  findAll(): Promise<Inquiry[]> {
-    return this.inquiryRepository.find({ order: { receivedAt: 'DESC' } });
+  async findAll(options: FindAllOptions = {}): Promise<{ data: Inquiry[]; total: number; page: number; totalPages: number }> {
+    const { status, sort = 'newest', page = 1 } = options;
+
+    const qb = this.inquiryRepository.createQueryBuilder('inquiry');
+
+    if (status) {
+      qb.where('inquiry.status = :status', { status });
+    }
+
+    if (sort === 'newest') {
+      qb.orderBy('inquiry.receivedAt', 'DESC');
+    } else if (sort === 'oldest') {
+      qb.orderBy('inquiry.receivedAt', 'ASC');
+    } else {
+      qb.orderBy('inquiry.receivedAt', 'ASC');
+    }
+
+    const total = await qb.getCount();
+    const data = await qb
+      .skip((page - 1) * PAGE_SIZE)
+      .take(PAGE_SIZE)
+      .getMany();
+
+    return { data, total, page, totalPages: Math.ceil(total / PAGE_SIZE) };
   }
 
   async findOne(id: number): Promise<Inquiry> {
