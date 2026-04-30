@@ -198,7 +198,7 @@ export default function InquiryListPage() {
                           <td className="px-4 py-3 text-gray-700">{formatDate(inquiry.receivedAt)}</td>
                           <td className="px-4 py-3 text-gray-900">{inquiry.name}</td>
                           <td className="px-4 py-3 text-gray-700 max-w-xs truncate">{inquiry.subject}</td>
-                          <td className="px-4 py-3">
+                          <td className="px-4 py-3 text-gray-900">
                             <span className="whitespace-nowrap">
                               {STATUS_ICON[inquiry.status]} {STATUS_LABEL[inquiry.status]}
                             </span>
