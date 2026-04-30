@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-lg shadow p-8">
-        <h1 className="text-2xl font-bold text-center mb-8">管理者ログイン</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-8">管理者ログイン</h1>
 
         {error && (
           <p className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded px-4 py-3">
@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="mb-5">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
               メールアドレス
             </label>
             <input
@@ -66,12 +66,12 @@ export default function AdminLoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div className="mb-7">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-1">
               パスワード
             </label>
             <input
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
