@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { IsEnum, IsOptional } from 'class-validator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { InquiryStatus } from './inquiry.entity';
@@ -40,6 +41,8 @@ export class InquiryController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Throttle({ 'inquiry-create': { limit: 5, ttl: 60_000 } })
+  @UseGuards(ThrottlerGuard)
   create(@Body() dto: CreateInquiryDto) {
     return this.inquiryService.create(dto);
   }
