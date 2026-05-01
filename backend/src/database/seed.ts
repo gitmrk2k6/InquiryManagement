@@ -15,17 +15,24 @@ const dataSource = new DataSource({
 });
 
 async function seed() {
+  const email = process.env.ADMIN_EMAIL ?? 'admin@example.com';
+  const password = process.env.ADMIN_PASSWORD ?? 'password123';
+
+  if (password.length < 8) {
+    throw new Error('ADMIN_PASSWORD must be at least 8 characters');
+  }
+
   await dataSource.initialize();
 
   const adminRepo = dataSource.getRepository(AdminUser);
 
-  const exists = await adminRepo.findOneBy({ email: 'admin@example.com' });
+  const exists = await adminRepo.findOneBy({ email });
   if (!exists) {
-    const passwordHash = await bcrypt.hash('password123', 10);
-    await adminRepo.save({ email: 'admin@example.com', passwordHash });
-    console.log('Seeded: admin@example.com');
+    const passwordHash = await bcrypt.hash(password, 10);
+    await adminRepo.save({ email, passwordHash });
+    console.log(`Seeded: ${email}`);
   } else {
-    console.log('Skipped: admin@example.com already exists');
+    console.log(`Skipped: ${email} already exists`);
   }
 
   await dataSource.destroy();
