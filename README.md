@@ -12,20 +12,22 @@
 | MVP 機能 | F-01 〜 F-06（公開フォーム送信・管理者ログイン・問い合わせ管理） |
 | スコープ外 | F-07 〜 F-11（メール通知・担当者割当・社内コメント等） |
 
+> 本 README のデモ画像は **AWS にデプロイした本番環境（<http://54.248.22.131>）** で撮影したもの。URL バーから本番アクセスであることが確認できる。
+
 ---
 
 ## デモ（画面証跡）
 
 ### F-01: 問い合わせ送信フォーム
 
-公開ページから顧客が問い合わせを送信できる機能。バリデーションとスパム対策（IP レートリミット）を実装。
+公開ページから顧客が問い合わせを送信できる機能。バリデーションとスパム対策（IP レートリミット 5 回/分）を実装。
 
 | 内容 | スクショ |
 | --- | --- |
-| フォーム初期表示 | ![F-01 フォーム](docs/evidence/01-form-empty.png) |
-| 入力エラー表示 | ![F-01 バリデーション](docs/evidence/02-form-validation.png) |
 | 入力済み（送信前） | ![F-01 入力済み](docs/evidence/03-form-filled.png) |
-| レートリミット（429） | ![F-01 429](docs/evidence/04-rate-limit.png) |
+| バリデーションエラー | ![F-01 バリデーション](docs/evidence/02-form-validation.png) |
+
+> レートリミット（429）の発動は実装コード（[`backend/src/inquiry/inquiry.controller.ts`](backend/src/inquiry/inquiry.controller.ts) の `@Throttle` デコレーター）と PR #34 のテスト結果で確認可能。
 
 ### F-02: 送信完了画面
 
@@ -43,8 +45,9 @@ JWT（HttpOnly Cookie）で認証する管理者ログイン。
 | --- | --- |
 | ログイン画面 | ![F-03 ログイン](docs/evidence/06-login-form.png) |
 | 認証エラー | ![F-03 エラー](docs/evidence/07-login-error.png) |
-| ログイン直後の管理画面 | ![F-03 ログイン後](docs/evidence/08-after-login.png) |
-| ログアウト後の画面 | ![F-03 ログアウト後](docs/evidence/09-after-logout.png) |
+| ログイン後の管理画面 | ![F-03 ログイン後](docs/evidence/08-after-login-list.png) |
+
+> ログアウトボタン押下後は `/admin/login` にリダイレクトされる（画面はログイン画面と同一のため省略）。
 
 ### F-04: 問い合わせ一覧
 
@@ -52,7 +55,7 @@ JWT（HttpOnly Cookie）で認証する管理者ログイン。
 
 | 内容 | スクショ |
 | --- | --- |
-| 一覧表示（複数件） | ![F-04 一覧](docs/evidence/10-inquiry-list.png) |
+| 一覧表示（複数件） | ![F-04 一覧](docs/evidence/08-after-login-list.png) |
 
 ### F-05: 問い合わせ詳細・ステータス変更
 
@@ -61,7 +64,7 @@ JWT（HttpOnly Cookie）で認証する管理者ログイン。
 | 内容 | スクショ |
 | --- | --- |
 | 詳細画面（変更前: 未対応） | ![F-05 変更前](docs/evidence/11-detail-before.png) |
-| 詳細画面（変更後: 対応中 / 完了） | ![F-05 変更後](docs/evidence/12-detail-after.png) |
+| 詳細画面（変更後: 対応中） | ![F-05 変更後](docs/evidence/12-detail-after.png) |
 
 ### F-06: 一覧の絞り込み・ソート
 
@@ -69,27 +72,24 @@ JWT（HttpOnly Cookie）で認証する管理者ログイン。
 
 | 内容 | スクショ |
 | --- | --- |
-| ステータスフィルタ適用 | ![F-06 フィルタ](docs/evidence/13-filter-status.png) |
-| ソート切替（昇順） | ![F-06 ソート](docs/evidence/14-sort-asc.png) |
-| 経過日数の強調表示 | ![F-06 経過日数](docs/evidence/15-elapsed-highlight.png) |
+| ステータスフィルタ適用（対応中） | ![F-06 フィルタ](docs/evidence/13-filter-status.png) |
+| ソート切替（経過日数の長い順） | ![F-06 ソート](docs/evidence/14-sort-elapsed.png) |
+| 経過日数の強調表示（4 日以上の未対応） | ![F-06 経過日数](docs/evidence/15-elapsed-highlight.png) |
 
 ---
 
 ## AWS デプロイ証跡
 
-> Terraform で AWS にインフラを構築し、本番環境で動作することを確認する。
+> Terraform で AWS にインフラを構築し、本番環境（<http://54.248.22.131>）で動作することを確認済み。
+> 本番アクセスの証跡は上記デモセクションの各スクショ（URL バー参照）で確認可能。
 
 | 内容 | スクショ |
 | --- | --- |
-| `terraform apply` 出力 | ![apply 出力](docs/evidence/20-terraform-apply.png) |
 | AWS コンソール: EC2 インスタンス | ![EC2](docs/evidence/21-aws-ec2.png) |
 | AWS コンソール: RDS | ![RDS](docs/evidence/22-aws-rds.png) |
 | AWS コンソール: VPC リソースマップ | ![VPC](docs/evidence/23-aws-vpc.png) |
-| 本番 URL でフォーム表示 | ![本番フォーム](docs/evidence/24-prod-form.png) |
-| 本番 URL で送信完了画面 | ![本番完了](docs/evidence/25-prod-complete.png) |
-| 本番管理画面で受信確認 | ![本番管理画面](docs/evidence/26-prod-admin-list.png) |
 
-**本番アクセス URL**: `http://<EC2 public IP>`（デプロイ後に追記）
+**本番アクセス URL**: <http://54.248.22.131>/
 
 ---
 
