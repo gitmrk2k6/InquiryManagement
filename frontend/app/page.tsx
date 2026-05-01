@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { API_URL } from '@/lib/api';
 
 interface FormValues {
   name: string;
@@ -62,7 +63,7 @@ export default function InquiryFormPage() {
 
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3001/inquiries', {
+      const res = await fetch(`${API_URL}/inquiries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { API_URL } from '@/lib/api';
 
 type InquiryStatus = 'open' | 'in_progress' | 'closed';
 
@@ -44,7 +45,7 @@ export default function InquiryDetailPage() {
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(`http://localhost:3001/inquiries/${id}`, {
+      const res = await fetch(`${API_URL}/inquiries/${id}`, {
         credentials: 'include',
       });
       if (res.status === 401) {
@@ -67,7 +68,7 @@ export default function InquiryDetailPage() {
     setSaveError('');
     setSaved(false);
     try {
-      const res = await fetch(`http://localhost:3001/inquiries/${id}/status`, {
+      const res = await fetch(`${API_URL}/inquiries/${id}/status`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -114,7 +115,7 @@ export default function InquiryDetailPage() {
         <h1 className="text-lg font-bold text-gray-900">問い合わせ管理システム</h1>
         <button
           onClick={async () => {
-            await fetch('http://localhost:3001/auth/logout', { method: 'POST', credentials: 'include' });
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' });
             router.push('/admin/login');
           }}
           className="text-sm text-gray-600 hover:text-gray-900 border border-gray-300 rounded px-3 py-1"
