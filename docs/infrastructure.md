@@ -80,7 +80,7 @@ graph TD
 | AMI | Amazon Linux 2023 |
 | ストレージ | 20 GB（gp3） |
 | 配置 | パブリックサブネット |
-| Elastic IP | 割り当てあり（固定 IP） |
+| Elastic IP | なし（学習用途のため動的 public IP を使用） |
 
 **動作するプロセス**
 
