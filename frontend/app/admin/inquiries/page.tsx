@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import { API_URL } from '@/lib/api';
 
 type InquiryStatus = 'open' | 'in_progress' | 'closed';
 
@@ -42,7 +43,7 @@ function formatDate(iso: string): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
 
-export default function InquiryListPage() {
+function InquiryListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -77,7 +78,7 @@ export default function InquiryListPage() {
         const params = new URLSearchParams({ sort, page: String(page) });
         if (status) params.set('status', status);
 
-        const res = await fetch(`http://localhost:3001/inquiries?${params}`, {
+        const res = await fetch(`${API_URL}/inquiries?${params}`, {
           credentials: 'include',
         });
         if (res.status === 401) {
@@ -101,7 +102,7 @@ export default function InquiryListPage() {
   }, [status, sort, page, router]);
 
   async function handleLogout() {
-    await fetch('http://localhost:3001/auth/logout', {
+    await fetch(`${API_URL}/auth/logout`, {
       method: 'POST',
       credentials: 'include',
     });
@@ -235,5 +236,13 @@ export default function InquiryListPage() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function InquiryListPage() {
+  return (
+    <Suspense fallback={<p className="text-sm text-gray-500 p-6">読み込み中...</p>}>
+      <InquiryListContent />
+    </Suspense>
   );
 }
