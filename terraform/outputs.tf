@@ -1,6 +1,6 @@
 output "ec2_public_ip" {
-  description = "EC2 instance Elastic IP (use this for SSH and browser access)"
-  value       = aws_eip.app.public_ip
+  description = "EC2 instance public IP (changes on stop/start - use for SSH and browser access)"
+  value       = aws_instance.app.public_ip
 }
 
 output "rds_endpoint" {
@@ -10,5 +10,5 @@ output "rds_endpoint" {
 
 output "ssh_command" {
   description = "SSH command to connect to EC2"
-  value       = "ssh -i <your-key.pem> ec2-user@${aws_eip.app.public_ip}"
+  value       = "ssh -i <your-key.pem> ec2-user@${aws_instance.app.public_ip}"
 }
