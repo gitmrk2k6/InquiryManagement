@@ -7,7 +7,7 @@
 | 項目 | 内容 |
 | --- | --- |
 | コース | RaiseTech AI エンジニアコース |
-| 課題 | 第3回課題 |
+| 課題 | 初級編最終課題 |
 | 方針 | TaskManagement とは異なる技術スタックで構築 |
 | MVP 機能 | F-01 〜 F-06（公開フォーム送信・管理者ログイン・問い合わせ管理） |
 | スコープ外 | F-07 〜 F-11（メール通知・担当者割当・社内コメント等） |
@@ -99,24 +99,24 @@ JWT（HttpOnly Cookie）で認証する管理者ログイン。
 
 ```mermaid
 graph LR
-    Customer[顧客<br/>ブラウザ]
-    Admin[管理者<br/>ブラウザ]
+    Customer[顧客 ブラウザ]
+    Admin[管理者 ブラウザ]
 
-    subgraph EC2[EC2 / Amazon Linux 2023]
-        Nginx[Nginx<br/>:80]
-        Next[Next.js<br/>:3000]
-        Nest[NestJS<br/>:3001]
+    subgraph EC2["EC2 / Amazon Linux 2023"]
+        Nginx["Nginx :80"]
+        Next["Next.js :3000"]
+        Nest["NestJS :3001"]
     end
 
-    subgraph RDS[RDS / MySQL 8.0]
+    subgraph RDS["RDS / MySQL 8.0"]
         DB[(inquiry_db)]
     end
 
     Customer -->|HTTP| Nginx
     Admin -->|HTTP| Nginx
-    Nginx -->|"/api/*"| Nest
-    Nginx -->|"/*"| Next
-    Nest -->|MySQL :3306| DB
+    Nginx -->|/api/*| Nest
+    Nginx -->|/*| Next
+    Nest -->|MySQL 3306| DB
 ```
 
 ### AWS インフラ構成図
@@ -125,19 +125,19 @@ graph LR
 graph TD
     Internet[インターネット]
 
-    subgraph AWS[AWS ap-northeast-1]
+    subgraph AWS["AWS ap-northeast-1"]
         IGW[Internet Gateway]
 
-        subgraph VPC[VPC 10.0.0.0/16]
-            subgraph Public[パブリックサブネット 10.0.1.0/24]
+        subgraph VPC["VPC 10.0.0.0/16"]
+            subgraph Public["パブリックサブネット 10.0.1.0/24"]
                 EC2[EC2 t3.micro]
             end
 
-            subgraph PrivA[プライベートサブネット 10.0.2.0/24 - AZ a]
+            subgraph PrivA["プライベートサブネット 10.0.2.0/24 AZ-a"]
                 RDSA[RDS Subnet]
             end
 
-            subgraph PrivC[プライベートサブネット 10.0.3.0/24 - AZ c]
+            subgraph PrivC["プライベートサブネット 10.0.3.0/24 AZ-c"]
                 RDSC[RDS Subnet]
             end
 
